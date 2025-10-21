@@ -1,0 +1,1850 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Waste Management System | বর্জ্য ব্যবস্থাপনা সিস্টেম</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-green: #2d7a4a;
+            --primary-blue: #1e5a7a;
+            --accent-green: #4a9d6f;
+            --light-gray: #f5f7f6;
+            --medium-gray: #d4d9d7;
+            --dark-gray: #2c3e3f;
+            --white: #ffffff;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --danger: #e74c3c;
+            --text-primary: #2c3e3f;
+            --text-secondary: #7f8c8d;
+            --border-radius: 8px;
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--text-primary);
+            background-color: var(--light-gray);
+            line-height: 1.6;
+        }
+
+        /* Navigation */
+        nav {
+            background: linear-gradient(135deg, var(--primary-green) 0%, #1f6b3f 100%);
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .nav-brand {
+            color: var(--white);
+            font-size: 1.3rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-brand::before {
+            content: "♻️";
+            font-size: 1.6rem;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            list-style: none;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .nav-links a {
+            color: var(--white);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: var(--transition);
+            cursor: pointer;
+            padding: 0.5rem 0.75rem;
+            border-radius: 4px;
+        }
+
+        .nav-links a:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: var(--accent-green);
+        }
+
+        .nav-links a.active {
+            background-color: var(--accent-green);
+            color: var(--white);
+            font-weight: bold;
+        }
+
+        .lang-toggle {
+            background-color: var(--accent-green);
+            color: var(--white);
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-weight: bold;
+            transition: var(--transition);
+            font-size: 0.85rem;
+        }
+
+        .lang-toggle:hover {
+            background-color: var(--primary-blue);
+            transform: scale(1.05);
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+            gap: 0.4rem;
+        }
+
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background-color: var(--white);
+            border-radius: 2px;
+            transition: var(--transition);
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1.5rem;
+        }
+
+        /* Sections */
+        section {
+            display: none;
+        }
+
+        section.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--primary-green) 0%, var(--primary-blue) 100%);
+            color: var(--white);
+            padding: 3rem 1.5rem;
+            border-radius: var(--border-radius);
+            text-align: center;
+            margin-bottom: 2rem;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        }
+
+        .hero h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .hero p {
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+            opacity: 0.95;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background-color: var(--accent-green);
+            color: var(--white);
+            text-decoration: none;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: bold;
+            transition: var(--transition);
+        }
+
+        .btn:hover {
+            background-color: var(--primary-blue);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-secondary {
+            background-color: var(--primary-blue);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--accent-green);
+        }
+
+        .btn-danger {
+            background-color: var(--danger);
+        }
+
+        .btn-danger:hover {
+            background-color: #c0392b;
+        }
+
+        .btn-success {
+            background-color: var(--success);
+        }
+
+        .btn-success:hover {
+            background-color: #229954;
+        }
+
+        /* Cards */
+        .card {
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            transition: var(--transition);
+            margin-bottom: 1.5rem;
+        }
+
+        .card:hover {
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+            transform: translateY(-2px);
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .card-title {
+            font-size: 1.2rem;
+            color: var(--primary-green);
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        .card-value {
+            font-size: 1.8rem;
+            color: var(--primary-blue);
+            font-weight: bold;
+            margin: 0.5rem 0;
+        }
+
+        .card-label {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--medium-gray);
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            font-family: inherit;
+            transition: var(--transition);
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary-green);
+            box-shadow: 0 0 0 3px rgba(45, 122, 74, 0.1);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        thead {
+            background-color: var(--primary-green);
+            color: var(--white);
+        }
+
+        th, td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid var(--medium-gray);
+            font-size: 0.9rem;
+        }
+
+        tbody tr:hover {
+            background-color: var(--light-gray);
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .status-pending {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+
+        .status-completed {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .status-failed {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        /* Modals */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background-color: var(--white);
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: var(--primary-green);
+            margin-bottom: 1rem;
+        }
+
+        .modal-close {
+            float: right;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-secondary);
+            transition: var(--transition);
+        }
+
+        .modal-close:hover {
+            color: var(--text-primary);
+        }
+
+        /* Alerts */
+        .alert {
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 0.95rem;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-warning {
+            background-color: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .alert-info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        /* Notification List */
+        .notification-item {
+            background-color: var(--white);
+            padding: 1rem;
+            border-left: 4px solid var(--primary-green);
+            margin-bottom: 1rem;
+            border-radius: var(--border-radius);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .notification-item.unread {
+            background-color: #f0f8f5;
+            border-left-color: var(--accent-green);
+        }
+
+        .notification-content {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .notification-time {
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+        }
+
+        /* Location Map */
+        .location-map {
+            width: 100%;
+            height: 300px;
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            border-radius: var(--border-radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-green);
+            font-weight: bold;
+            margin: 1rem 0;
+            border: 2px dashed var(--primary-green);
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--dark-gray);
+            color: var(--white);
+            padding: 1.5rem;
+            text-align: center;
+            margin-top: 3rem;
+            font-size: 0.9rem;
+        }
+
+        footer a {
+            color: var(--accent-green);
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                position: absolute;
+                top: 60px;
+                left: 0;
+                right: 0;
+                flex-direction: column;
+                background-color: var(--primary-green);
+                padding: 1rem;
+                gap: 0.5rem;
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+
+            .nav-brand {
+                font-size: 1.1rem;
+            }
+
+            .nav-brand::before {
+                font-size: 1.4rem;
+            }
+
+            .hero h1 {
+                font-size: 1.5rem;
+            }
+
+            .hero p {
+                font-size: 0.9rem;
+            }
+
+            .hero {
+                padding: 2rem 1rem;
+            }
+
+            .container {
+                padding: 1rem;
+            }
+
+            table {
+                font-size: 0.8rem;
+            }
+
+            th, td {
+                padding: 0.5rem;
+            }
+
+            .card-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .card {
+                padding: 1rem;
+            }
+
+            .notification-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .location-map {
+                height: 200px;
+            }
+
+            .modal-content {
+                padding: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .nav-brand {
+                font-size: 1rem;
+            }
+
+            .nav-brand::before {
+                font-size: 1.2rem;
+            }
+
+            .lang-toggle {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.75rem;
+            }
+
+            .hero h1 {
+                font-size: 1.2rem;
+            }
+
+            .hero p {
+                font-size: 0.85rem;
+            }
+
+            .card-title {
+                font-size: 1rem;
+            }
+
+            .card-value {
+                font-size: 1.5rem;
+            }
+
+            .btn {
+                padding: 0.6rem 1.2rem;
+                font-size: 0.85rem;
+            }
+
+            table {
+                font-size: 0.75rem;
+            }
+
+            th, td {
+                padding: 0.4rem;
+            }
+
+            .status-badge {
+                padding: 0.3rem 0.6rem;
+                font-size: 0.7rem;
+            }
+        }
+
+        /* Utility Classes */
+        .text-center {
+            text-align: center;
+        }
+
+        .mt-2 {
+            margin-top: 1rem;
+        }
+
+        .mb-2 {
+            margin-bottom: 1rem;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .bonus-banner {
+            background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+            color: var(--white);
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            text-align: center;
+            margin: 2rem 0;
+            font-size: 1.1rem;
+            font-weight: bold;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .recycling-center-card {
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            border-left: 4px solid var(--primary-green);
+        }
+
+        .recycling-center-card .card-title {
+            color: var(--primary-green);
+        }
+
+        .location-badge {
+            display: inline-block;
+            background-color: var(--primary-green);
+            color: var(--white);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin-top: 0.5rem;
+        }
+
+        /* Payment Method Styles */
+        .payment-methods {
+            background-color: var(--light-gray);
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            margin: 1.5rem 0;
+        }
+
+        .payment-method-group {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            border: 2px solid var(--medium-gray);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .payment-method-group:hover {
+            border-color: var(--primary-green);
+            background-color: #f9fdf8;
+        }
+
+        .payment-method-group input[type="radio"] {
+            width: auto;
+            margin-right: 1rem;
+            cursor: pointer;
+            accent-color: var(--primary-green);
+        }
+
+        .payment-method-info {
+            flex: 1;
+        }
+
+        .payment-method-name {
+            font-weight: bold;
+            color: var(--text-primary);
+            font-size: 1rem;
+        }
+
+        .payment-method-desc {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-top: 0.25rem;
+        }
+
+        .payment-method-icon {
+            font-size: 1.5rem;
+            margin-right: 1rem;
+        }
+
+        .payment-details {
+            background-color: #f0f8f5;
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            margin-top: 1rem;
+            display: none;
+            border-left: 4px solid var(--primary-green);
+        }
+
+        .payment-details.active {
+            display: block;
+        }
+
+        .payment-details input {
+            margin-bottom: 0.75rem;
+        }
+
+        .payment-summary {
+            background-color: var(--white);
+            padding: 1.5rem;
+            border-radius: var(--border-radius);
+            margin-top: 1.5rem;
+            border: 2px solid var(--light-gray);
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--medium-gray);
+        }
+
+        .summary-row:last-child {
+            border-bottom: none;
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: var(--primary-green);
+            padding-top: 1rem;
+            margin-top: 0.5rem;
+            border-top: 2px solid var(--medium-gray);
+        }
+
+        .btn-pay {
+            width: 100%;
+            padding: 1rem;
+            margin-top: 1.5rem;
+            font-size: 1rem;
+            font-weight: bold;
+        }
+
+        .btn-refund {
+            background-color: var(--primary-blue);
+            margin-left: 0.5rem;
+        }
+
+        .btn-refund:hover {
+            background-color: var(--accent-green);
+        }
+
+        .payment-action-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .payment-action-buttons .btn {
+            flex: 1;
+            min-width: 150px;
+        }
+
+        @media (max-width: 768px) {
+            .payment-method-group {
+                padding: 0.75rem;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .payment-method-icon {
+                margin-right: 0;
+                margin-bottom: 0.5rem;
+            }
+
+            .payment-method-group input[type="radio"] {
+                margin-bottom: 0.5rem;
+            }
+
+            .payment-action-buttons {
+                flex-direction: column;
+            }
+
+            .payment-action-buttons .btn {
+                width: 100%;
+            }
+
+            .btn-refund {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-brand" data-en="Waste Management System" data-bn="বর্জ্য ব্যবস্থাপনা সিস্টেম">বর্জ্য ব্যবস্থাপনা সিস্টেম</div>
+        <div class="hamburger" id="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <ul class="nav-links" id="navLinks">
+            <li><a onclick="showSection('home')" data-en="Home" data-bn="মূলপাতা">মূলপাতা</a></li>
+            <li><a onclick="showSection('sell-waste')" data-en="Sell Waste" data-bn="বর্জ্য বিক্রি">বর্জ্য বিক্রি</a></li>
+            <li><a onclick="showSection('collection')" data-en="Collection Team" data-bn="সংগ্রহ দল">সংগ্রহ দল</a></li>
+            <li><a onclick="showSection('dashboard')" data-en="Dashboard" data-bn="ড্যাশবোর্ড">ড্যাশবোর্ড</a></li>
+            <li><a onclick="showSection('recycling')" data-en="Recycling Center" data-bn="রিসাইক্লিং সেন্টার">রিসাইক্লিং সেন্টার</a></li>
+            <li><a onclick="showSection('payments')" data-en="Payments" data-bn="পেমেন্ট">পেমেন্ট</a></li>
+            <li><a onclick="showSection('notifications')" data-en="Notifications" data-bn="বিজ্ঞপ্তি">বিজ্ঞপ্তি</a></li>
+            <li><a onclick="showSection('contact')" data-en="Contact" data-bn="যোগাযোগ">যোগাযোগ</a></li>
+        </ul>
+        <button class="lang-toggle" id="langToggle" onclick="toggleLanguage()">EN</button>
+    </nav>
+
+    <div class="container">
+        <!-- Home Section -->
+        <section id="home" class="active">
+            <div class="hero">
+                <h1 data-en="Waste Management System" data-bn="বর্জ্য ব্যবস্থাপনা সিস্টেম">বর্জ্য ব্যবস্থাপনা সিস্টেম</h1>
+                <p data-en="Turn Waste into Value | বর্জ্যকে মূল্যবান সম্পদে পরিণত করুন" data-bn="Turn Waste into Value | বর্জ্যকে মূল্যবান সম্পদে পরিণত করুন">Turn Waste into Value | বর্জ্যকে মূল্যবান সম্পদে পরিণত করুন</p>
+                <button class="btn" onclick="showSection('sell-waste')" data-en="Get Started" data-bn="শুরু করুন">শুরু করুন</button>
+            </div>
+
+            <div class="card-grid">
+                <div class="card">
+                    <div class="card-title" data-en="Easy Selling" data-bn="সহজ বিক্রয়">সহজ বিক্রয়</div>
+                    <p data-en="Sell your waste easily and get instant quotes" data-bn="আপনার বর্জ্য সহজেই বিক্রি করুন এবং তাৎক্ষণিক উদ্ধৃতি পান">আপনার বর্জ্য সহজেই বিক্রি করুন এবং তাৎক্ষণিক উদ্ধৃতি পান</p>
+                </div>
+                <div class="card">
+                    <div class="card-title" data-en="Free Pickup" data-bn="বিনামূল্যে পিকআপ">বিনামূল্যে পিকআপ</div>
+                    <p data-en="We collect waste from your location at no extra cost" data-bn="আমরা আপনার অবস্থান থেকে কোনো অতিরিক্ত খরচ ছাড়াই বর্জ্য সংগ্রহ করি">আমরা আপনার অবস্থান থেকে কোনো অতিরিক্ত খরচ ছাড়াই বর্জ্য সংগ্রহ করি</p>
+                </div>
+                <div class="card">
+                    <div class="card-title" data-en="Instant Payment" data-bn="তাৎক্ষণিক পেমেন্ট">তাৎক্ষণিক পেমেন্ট</div>
+                    <p data-en="Get paid instantly through your preferred payment method" data-bn="আপনার পছন্দের পেমেন্ট পদ্ধতির মাধ্যমে তাৎক্ষণিক অর্থ পান">আপনার পছন্দের পেমেন্ট পদ্ধতির মাধ্যমে তাৎক্ষণিক অর্থ পান</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sell Waste Section -->
+        <section id="sell-waste">
+            <div class="card">
+                <h2 data-en="Sell Your Waste" data-bn="আপনার বর্জ্য বিক্রি করুন">আপনার বর্জ্য বিক্রি করুন</h2>
+                <form onsubmit="submitWasteForm(event)">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label data-en="User Type" data-bn="ব্যবহারকারীর ধরন">ব্যবহারকারীর ধরন</label>
+                            <select id="userType" required>
+                                <option value="">-- Select --</option>
+                                <option value="household" data-en="Household" data-bn="পরিবার">পরিবার</option>
+                                <option value="mall" data-en="Shopping Mall" data-bn="শপিং মল">শপিং মল</option>
+                                <option value="scrap" data-en="Scrap Shop" data-bn="স্ক্র্যাপ শপ">স্ক্র্যাপ শপ</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label data-en="Waste Type" data-bn="বর্জ্যের ধরন">বর্জ্যের ধরন</label>
+                            <select id="wasteType" required>
+                                <option value="">-- Select --</option>
+                                <option value="plastic" data-en="Plastic" data-bn="প্লাস্টিক">প্লাস্টিক</option>
+                                <option value="glass" data-en="Glass" data-bn="কাচ">কাচ</option>
+                                <option value="paper" data-en="Paper" data-bn="কাগজ">কাগজ</option>
+                                <option value="clothes" data-en="Clothes" data-bn="পোশাক">পোশাক</option>
+                                <option value="iron" data-en="Iron" data-bn="লোহা">লোহা</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Added location features -->
+                    <div class="form-group">
+                        <label data-en="Full Address" data-bn="সম্পূর্ণ ঠিকানা">সম্পূর্ণ ঠিকানা</label>
+                        <input type="text" id="fullAddress" placeholder="House No., Street, Area" required>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label data-en="Area / Zone" data-bn="এলাকা / জোন">এলাকা / জোন</label>
+                            <select id="area" required>
+                                <option value="">-- Select --</option>
+                                <option value="dhaka-north" data-en="Dhaka North" data-bn="ঢাকা উত্তর">ঢাকা উত্তর</option>
+                                <option value="dhaka-south" data-en="Dhaka South" data-bn="ঢাকা দক্ষিণ">ঢাকা দক্ষিণ</option>
+                                <option value="dhaka-east" data-en="Dhaka East" data-bn="ঢাকা পূর্ব">ঢাকা পূর্ব</option>
+                                <option value="dhaka-west" data-en="Dhaka West" data-bn="ঢাকা পশ্চিম">ঢাকা পশ্চিম</option>
+                                <option value="chittagong" data-en="Chittagong" data-bn="চট্টগ্রাম">চট্টগ্রাম</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label data-en="Postal Code" data-bn="পোস্টাল কোড">পোস্টাল কোড</label>
+                            <input type="text" id="postalCode" placeholder="e.g., 1205" required>
+                        </div>
+                    </div>
+
+                    <div class="location-map" id="locationMap" data-en="📍 Location Map Preview" data-bn="📍 অবস্থান মানচিত্র প্রিভিউ">📍 অবস্থান মানচিত্র প্রিভিউ</div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label data-en="Estimated Weight (kg)" data-bn="আনুমানিক ওজন (কেজি)">আনুমানিক ওজন (কেজি)</label>
+                            <input type="number" id="weight" min="1" required>
+                        </div>
+                        <div class="form-group">
+                            <label data-en="Preferred Pickup Time" data-bn="পছন্দের পিকআপ সময়">পছন্দের পিকআপ সময়</label>
+                            <input type="time" id="pickupTime" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label data-en="Payment Method" data-bn="পেমেন্ট পদ্ধতি">পেমেন্ট পদ্ধতি</label>
+                        <select id="paymentMethod" required>
+                            <option value="">-- Select --</option>
+                            <option value="cash" data-en="Cash" data-bn="নগদ">নগদ</option>
+                            <option value="mobile" data-en="Mobile Banking" data-bn="মোবাইল ব্যাংকিং">মোবাইল ব্যাংকিং</option>
+                            <option value="bank" data-en="Bank Transfer" data-bn="ব্যাংক ট্রান্সফার">ব্যাংক ট্রান্সফার</option>
+                            <option value="cheque" data-en="Cheque" data-bn="চেক">চেক</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn" data-en="Submit Request" data-bn="অনুরোধ জমা দিন">অনুরোধ জমা দিন</button>
+                </form>
+            </div>
+
+            <div id="wasteConfirmation" class="hidden">
+                <div class="card">
+                    <div class="alert alert-success">
+                        <span>✓</span>
+                        <div>
+                            <strong data-en="Request Submitted Successfully!" data-bn="অনুরোধ সফলভাবা জমা দেওয়া হয়েছে!">অনুরোধ সফলভাবে জমা দেওয়া হয়েছে!</strong>
+                            <p data-en="Your waste will be picked up at the scheduled time." data-bn="আপনার বর্জ্য নির্ধারিত সময়ে সংগ্রহ করা হবে।">আপনার বর্জ্য নির্ধারিত সময়ে সংগ্রহ করা হবে।</p>
+                        </div>
+                    </div>
+                    <div class="card-grid">
+                        <div class="card">
+                            <div class="card-label" data-en="Estimated Price" data-bn="আনুমানিক মূল্য">আনুমানিক মূল্য</div>
+                            <div class="card-value" id="estimatedPrice">৳ 0</div>
+                        </div>
+                        <div class="card">
+                            <div class="card-label" data-en="Pickup Status" data-bn="পিকআপ স্ট্যাটাস">পিকআপ স্ট্যাটাস</div>
+                            <div class="card-value" style="color: var(--warning); font-size: 1.2rem;" data-en="Assigned" data-bn="নির্ধারিত">নির্ধারিত</div>
+                        </div>
+                        <div class="card">
+                            <div class="card-label" data-en="Pickup Location" data-bn="পিকআপ অবস্থান">পিকআপ অবস্থান</div>
+                            <div class="card-value" style="font-size: 1rem;" id="confirmLocation">-</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mt-2">
+                <h3 data-en="Rejected Waste Example" data-bn="প্রত্যাখ্যাত বর্জ্যের উদাহরণ">প্রত্যাখ্যাত বর্জ্যের উদাহরণ</h3>
+                <div class="alert alert-danger">
+                    <span>✗</span>
+                    <div>
+                        <strong data-en="Wet or Unsorted Waste" data-bn="ভেজা বা অসাজানো বর্জ্য">ভেজা বা অসাজানো বর্জ্য</strong>
+                        <p data-en="Please ensure waste is dry and properly sorted before submission." data-bn="জমা দেওয়ার আগে বর্জ্য শুষ্ক এবং সঠিকভাবে সাজানো নিশ্চিত করুন।">জমা দেওয়ার আগে বর্জ্য শুষ্ক এবং সঠিকভাবে সাজানো নিশ্চিত করুন।</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Collection Team Section -->
+        <section id="collection">
+            <div class="card">
+                <h2 data-en="Daily Pickup Assignments" data-bn="দৈনিক পিকআপ নিয়োগ">দৈনিক পিকআপ নিয়োগ</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th data-en="Seller Name" data-bn="বিক্রেতার নাম">বিক্রেতার নাম</th>
+                            <th data-en="Location" data-bn="অবস্থান">অবস্থান</th>
+                            <th data-en="Waste Type" data-bn="বর্জ্যের ধরন">বর্জ্যের ধরন</th>
+                            <th data-en="Weight (kg)" data-bn="ওজন (কেজি)">ওজন (কেজি)</th>
+                            <th data-en="Status" data-bn="স্ট্যাটাস">স্ট্যাটাস</th>
+                            <th data-en="Action" data-bn="পদক্ষেপ">পদক্ষেপ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>রহিম আহমেদ</td>
+                            <td>ঢাকা, বনানী</td>
+                            <td>প্লাস্টিক</td>
+                            <td>25</td>
+                            <td><span class="status-badge status-pending" data-en="Pending" data-bn="অপেক্ষমাণ">অপেক্ষমাণ</span></td>
+                            <td>
+                                <button class="btn" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;" onclick="updateStatus(this, 'completed')" data-en="Complete" data-bn="সম্পন্ন">সম্পন্ন</button>
+                                <button class="btn btn-danger" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;" onclick="updateStatus(this, 'failed')" data-en="Fail" data-bn="ব্যর্থ">ব্যর্থ</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>ফাতিমা খান</td>
+                            <td>ঢাকা, গুলশান</td>
+                            <td>কাচ</td>
+                            <td>15</td>
+                            <td><span class="status-badge status-completed" data-en="Completed" data-bn="সম্পন্ন">সম্পন্ন</span></td>
+                            <td><span style="color: var(--text-secondary);" data-en="Done" data-bn="সম্পন্ন">সম্পন্ন</span></td>
+                        </tr>
+                        <tr>
+                            <td>করিম মিয়া</td>
+                            <td>ঢাকা, ধানমন্ডি</td>
+                            <td>কাগজ</td>
+                            <td>40</td>
+                            <td><span class="status-badge status-pending" data-en="Pending" data-bn="অপেক্ষমাণ">অপেক্ষমাণ</span></td>
+                            <td>
+                                <button class="btn" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;" onclick="updateStatus(this, 'completed')" data-en="Complete" data-bn="সম্পন্ন">সম্পন্ন</button>
+                                <button class="btn btn-danger" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;" onclick="updateStatus(this, 'failed')" data-en="Fail" data-bn="ব্যর্থ">ব্যর্থ</button>
+                            </td>
+                        </tr>
+                        <!-- Added failed pickup example -->
+                        <tr>
+                            <td>সালমা আক্তার</td>
+                            <td>ঢাকা, মিরপুর</td>
+                            <td>প্লাস্টিক</td>
+                            <td>20</td>
+                            <td><span class="status-badge status-failed" data-en="Failed" data-bn="ব্যর্থ">ব্যর্থ</span></td>
+                            <td><span style="color: var(--danger);" data-en="Reschedule" data-bn="পুনর্নির্ধারণ">পুনর্নির্ধারণ</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="card-grid">
+                <div class="card">
+                    <div class="card-label" data-en="Total Collected Waste" data-bn="মোট সংগৃহীত বর্জ্য">মোট সংগৃহীত বর্জ্য</div>
+                    <div class="card-value">৳ 2,450</div>
+                </div>
+                <div class="card">
+                    <div class="card-label" data-en="Distance Covered" data-bn="দূরত্ব কভার করা">দূরত্ব কভার করা</div>
+                    <div class="card-value">45 কিমি</div>
+                </div>
+                <div class="card">
+                    <div class="card-label" data-en="Time Spent" data-bn="সময় ব্যয়">সময় ব্যয়</div>
+                    <div class="card-value">6 ঘন্টা</div>
+                </div>
+                <div class="card">
+                    <div class="card-label" data-en="Failed Pickups" data-bn="ব্যর্থ পিকআপ">ব্যর্থ পিকআপ</div>
+                    <div class="card-value" style="color: var(--danger);">1</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Dashboard Section -->
+        <section id="dashboard">
+            <h2 data-en="Company Management Dashboard" data-bn="কোম্পানি ব্যবস্থাপনা ড্যাশবোর্ড">কোম্পানি ব্যবস্থাপনা ড্যাশবোর্ড</h2>
+            <div class="card-grid">
+                <div class="card">
+                    <div class="card-label" data-en="Total Waste Collected" data-bn="মোট বর্জ্য সংগৃহীত">মোট বর্জ্য সংগৃহীত</div>
+                    <div class="card-value">12,450 কেজি</div>
+                </div>
+                <div class="card">
+                    <div class="card-label" data-en="Completed Pickups" data-bn="সম্পন্ন পিকআপ">সম্পন্ন পিকআপ</div>
+                    <div class="card-value">324</div>
+                </div>
+                <div class="card">
+                    <div class="card-label" data-en="Pending Pickups" data-bn="অপেক্ষমাণ পিকআপ">অপেক্ষমাণ পিকআপ</div>
+                    <div class="card-value">18</div>
+                </div>
+                <div class="card">
+                    <div class="card-label" data-en="Payments Made" data-bn="পেমেন্ট করা">পেমেন্ট করা</div>
+                    <div class="card-value">৳ 1,24,500</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3 data-en="Filter Options" data-bn="ফিল্টার অপশন">ফিল্টার অপশন</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label data-en="Seller Type" data-bn="বিক্রেতার ধরন">বিক্রেতার ধরন</label>
+                        <select>
+                            <option data-en="All" data-bn="সব">সব</option>
+                            <option data-en="Household" data-bn="পরিবার">পরিবার</option>
+                            <option data-en="Shopping Mall" data-bn="শপিং মল">শপিং মল</option>
+                            <option data-en="Scrap Shop" data-bn="স্ক্র্যাপ শপ">স্ক্র্যাপ শপ</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label data-en="Waste Type" data-bn="বর্জ্যের ধরন">বর্জ্যের ধরন</label>
+                        <select>
+                            <option data-en="All" data-bn="সব">সব</option>
+                            <option data-en="Plastic" data-bn="প্লাস্টিক">প্লাস্টিক</option>
+                            <option data-en="Glass" data-bn="কাচ">কাচ</option>
+                            <option data-en="Paper" data-bn="কাগজ">কাগজ</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label data-en="Location" data-bn="অবস্থান">অবস্থান</label>
+                        <select>
+                            <option data-en="All" data-bn="সব">সব</option>
+                            <option data-en="Dhaka" data-bn="ঢাকা">ঢাকা</option>
+                            <option data-en="Chittagong" data-bn="চট্টগ্রাম">চট্টগ্রাম</option>
+                        </select>
+                    </div>
+                </div>
+                <button class="btn" onclick="generateReport()" data-en="Generate Report" data-bn="রিপোর্ট তৈরি করুন">রিপোর্ট তৈরি করুন</button>
+            </div>
+        </section>
+
+        <!-- Recycling Center Section -->
+        <section id="recycling">
+            <h2 data-en="Recycling Center Inventory" data-bn="রিসাইক্লিং সেন্টার ইনভেন্টরি">রিসাইক্লিং সেন্টার ইনভেন্টরি</h2>
+            
+            <!-- Added recycling center names -->
+            <div class="card-grid">
+                <div class="card recycling-center-card">
+                    <div class="card-title">ঢাকা রিসাইক্লিং সেন্টার</div>
+                    <div class="location-badge">📍 ঢাকা, গুলশান</div>
+                    <p style="margin-top: 1rem; color: var(--text-secondary); font-size: 0.9rem;">প্রধান সেন্টার - সর্বোচ্চ ক্ষমতা</p>
+                </div>
+                <div class="card recycling-center-card">
+                    <div class="card-title">চট্টগ্রাম রিসাইক্লিং সেন্টার</div>
+                    <div class="location-badge">📍 চট্টগ্রাম, বন্দরনগর</div>
+                    <p style="margin-top: 1rem; color: var(--text-secondary); font-size: 0.9rem;">আঞ্চলিক সেন্টার</p>
+                </div>
+                <div class="card recycling-center-card">
+                    <div class="card-title">সিলেট রিসাইক্লিং সেন্টার</div>
+                    <div class="location-badge">📍 সিলেট, শহরকেন্দ্র</div>
+                    <p style="margin-top: 1rem; color: var(--text-secondary); font-size: 0.9rem;">উত্তর-পূর্ব সেন্টার</p>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 2rem; margin-bottom: 1rem;" data-en="Inventory Status" data-bn="ইনভেন্টরি স্ট্যাটাস">ইনভেন্টরি স্ট্যাটাস</h3>
+            <div class="card-grid">
+                <div class="card">
+                    <div class="card-title" data-en="Plastic" data-bn="প্লাস্টিক">প্লাস্টিক</div>
+                    <div class="card-value">2,450 কেজি</div>
+                    <p style="color: var(--success);" data-en="In Stock" data-bn="স্টকে আছে">স্টকে আছে</p>
+                </div>
+                <div class="card">
+                    <div class="card-title" data-en="Paper" data-bn="কাগজ">কাগজ</div>
+                    <div class="card-value">1,800 কেজি</div>
+                    <p style="color: var(--success);" data-en="In Stock" data-bn="স্টকে আছে">স্টকে আছে</p>
+                </div>
+                <div class="card">
+                    <div class="card-title" data-en="Glass" data-bn="কাচ">কাচ</div>
+                    <div class="card-value">950 কেজি</div>
+                    <p style="color: var(--warning);" data-en="Low Stock" data-bn="কম স্টক">কম স্টক</p>
+                </div>
+                <div class="card">
+                    <div class="card-title" data-en="Metal" data-bn="ধাতু">ধাতু</div>
+                    <div class="card-value">0 কেজি</div>
+                    <p style="color: var(--danger);" data-en="Out of Stock" data-bn="স্টক শেষ">স্টক শেষ</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3 data-en="Place Order" data-bn="অর্ডার দিন">অর্ডার দিন</h3>
+                <form onsubmit="submitRecyclingOrder(event)">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label data-en="Select Recycling Center" data-bn="রিসাইক্লিং সেন্টার নির্বাচন করুন">রিসাইক্লিং সেন্টার নির্বাচন করুন</label>
+                            <select id="recyclingCenter" required>
+                                <option value="">-- Select --</option>
+                                <option value="dhaka" data-en="Dhaka Recycling Center" data-bn="ঢাকা রিসাইক্লিং সেন্টার">ঢাকা রিসাইক্লিং সেন্টার</option>
+                                <option value="chittagong" data-en="Chittagong Recycling Center" data-bn="চট্টগ্রাম রিসাইক্লিং সেন্টার">চট্টগ্রাম রিসাইক্লিং সেন্টার</option>
+                                <option value="sylhet" data-en="Sylhet Recycling Center" data-bn="সিলেট রিসাইক্লিং সেন্টার">সিলেট রিসাইক্লিং সেন্টার</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label data-en="Waste Category" data-bn="বর্জ্য বিভাগ">বর্জ্য বিভাগ</label>
+                            <select id="recyclingCategory" required>
+                                <option value="">-- Select --</option>
+                                <option value="plastic" data-en="Plastic" data-bn="প্লাস্টিক">প্লাস্টিক</option>
+                                <option value="paper" data-en="Paper" data-bn="কাগজ">কাগজ</option>
+                                <option value="glass" data-en="Glass" data-bn="কাচ">কাচ</option>
+                                <option value="metal" data-en="Metal" data-bn="ধাতু">ধাতু</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label data-en="Quantity Required (kg)" data-bn="প্রয়োজনীয় পরিমাণ (কেজি)">প্রয়োজনীয় পরিমাণ (কেজি)</label>
+                            <input type="number" id="recyclingQuantity" min="1" required>
+                        </div>
+                        <div class="form-group">
+                            <label data-en="Payment Method" data-bn="পেমেন্ট পদ্ধতি">পেমেন্ট পদ্ধতি</label>
+                            <select id="recyclingPayment" required>
+                                <option value="">-- Select --</option>
+                                <option value="bank" data-en="Bank Transfer" data-bn="ব্যাংক ট্রান্সফার">ব্যাংক ট্রান্সফার</option>
+                                <option value="cheque" data-en="Cheque" data-bn="চেক">চেক</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn" data-en="Place Order" data-bn="অর্ডার দিন">অর্ডার দিন</button>
+                </form>
+            </div>
+
+            <div id="recyclingConfirmation" class="hidden">
+                <div class="alert alert-success">
+                    <span>✓</span>
+                    <div>
+                        <strong data-en="Order Placed Successfully!" data-bn="অর্ডার সফলভাবে দেওয়া হয়েছে!">অর্ডার সফলভাবে দেওয়া হয়েছে!</strong>
+                        <p data-en="Your order will be processed within 2-3 business days." data-bn="আপনার অর্ডার ২-৩ কর্মদিবসের মধ্যে প্রক্রিয়া করা হবে।">আপনার অর্ডার ২-৩ কর্মদিবসের মধ্যে প্রক্রিয়া করা হবে।</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Payments Section -->
+        <section id="payments">
+            <h2 data-en="Payment Transactions" data-bn="পেমেন্ট লেনদেন">পেমেন্ট লেনদেন</h2>
+            
+            <div class="card">
+                <h3 data-en="Transaction History" data-bn="লেনদেন ইতিহাস">লেনদেন ইতিহাস</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th data-en="Date" data-bn="তারিখ">তারিখ</th>
+                            <th data-en="Description" data-bn="বর্ণনা">বর্ণনা</th>
+                            <th data-en="Amount" data-bn="পরিমাণ">পরিমাণ</th>
+                            <th data-en="Method" data-bn="পদ্ধতি">পদ্ধতি</th>
+                            <th data-en="Status" data-bn="স্ট্যাটাস">স্ট্যাটাস</th>
+                            <th data-en="Action" data-bn="পদক্ষেপ">পদক্ষেপ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>২০২৫-০১-১৫</td>
+                            <td data-en="Waste Collection Payment" data-bn="বর্জ্য সংগ্রহ পেমেন্ট">বর্জ্য সংগ্রহ পেমেন্ট</td>
+                            <td>৳ 2,500</td>
+                            <td>bKash</td>
+                            <td><span class="status-badge status-completed" data-en="Completed" data-bn="সম্পন্ন">সম্পন্ন</span></td>
+                            <td><button class="btn" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;" onclick="viewReceipt(this)" data-en="Receipt" data-bn="রসিদ">রসিদ</button></td>
+                        </tr>
+                        <tr>
+                            <td>২০২৫-০১-১০</td>
+                            <td data-en="Waste Collection Payment" data-bn="বর্জ্য সংগ্রহ পেমেন্ট">বর্জ্য সংগ্রহ পেমেন্ট</td>
+                            <td>৳ 3,200</td>
+                            <td>Nagad</td>
+                            <td><span class="status-badge status-completed" data-en="Completed" data-bn="সম্পন্ন">সম্পন্ন</span></td>
+                            <td><button class="btn" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;" onclick="viewReceipt(this)" data-en="Receipt" data-bn="রসিদ">রসিদ</button></td>
+                        </tr>
+                        <tr>
+                            <td>২০২৫-০১-১০</td>
+                            <td data-en="Waste Collection Payment" data-bn="বর্জ্য সংগ্রহ পেমেন্ট">বর্জ্য সংগ্রহ পেমেন্ট</td>
+                            <td>৳ 1,800</td>
+                            <td data-en="Bank Transfer" data-bn="ব্যাংক ট্রান্সফার">ব্যাংক ট্রান্সফার</td>
+                            <td><span class="status-badge status-completed" data-en="Completed" data-bn="सम्पन्न">सम्पन्न</span></td>
+                            <td><button class="btn" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;" onclick="viewReceipt(this)" data-en="Receipt" data-bn="रसीद">रसीद</button></td>
+                        </tr>
+                        <tr>
+                            <td>২০২৫-০১-১০</td>
+                            <td data-en="Waste Collection Payment" data-bn="বর্জ্য সংগ্রহ পেমেন্ট">बर्जय संग्रह भुगतान</td>
+                            <td>৳ 2,100</td>
+                            <td>Rocket</td>
+                            <td><span class="status-badge status-failed" data-en="Failed" data-bn="বিফল">विफल</span></td>
+                            <td><button class="btn btn-danger" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;" onclick="retryFailedPayment(this)" data-en="Retry" data-bn="আবার চেষ্টা করুন">पुनः प्रयास करें</button></td>
+                        </tr>
+                        <tr>
+                            <td>২০২৫-০১-১০</td>
+                            <td data-en="Refund - Cancelled Order" data-bn="রিফান্ড - বাতিল অর্ডার">রিফান্ড - বাতিল অর্ডার</td>
+                            <td>৳ 1,500</td>
+                            <td>bKash</td>
+                            <td><span class="status-badge status-completed" data-en="Refunded" data-bn="রিফান্ড করা হয়েছে">রিফান্ড করা হয়েছে</span></td>
+                            <td><button class="btn" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;" onclick="viewReceipt(this)" data-en="Receipt" data-bn="রসিদ">রসিদ</button></td>
+                        </tr>
+                        <tr>
+                            <td>২০২৫-০১-১০</td>
+                            <td data-en="Waste Collection Payment" data-bn="বর্জ্য সংগ্রহ পেমেন্ট">बर्जय संग्रह भुगतान</td>
+                            <td>৳ 2,750</td>
+                            <td data-en="Cheque" data-bn="চেক">चेक</td>
+                            <td><span class="status-badge status-pending" data-en="Pending" data-bn="পেন্ডিং">अपेक्षमाण</span></td>
+                            <td><button class="btn" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;" onclick="viewReceipt(this)" data-en="Details" data-bn="विवरण">विवरण</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="card">
+                <h3 data-en="Current Payment Details" data-bn="বর্তমান পেমেন্ট বিবরণ">বর্তমান পেমেন্ট বিবরণ</h3>
+                
+                <div class="card-grid">
+                    <div class="card">
+                        <div class="card-label" data-en="Total Amount Due" data-bn="মোট পরিমাণ বকেয়া">মোট পরিমাণ বকেয়া</div>
+                        <div class="card-value">৳ 8,000</div>
+                    </div>
+                    <div class="card">
+                        <div class="card-label" data-en="Due Date" data-bn="পরিশোধের তারিখ">পরিশোধের তারিখ</div>
+                        <div class="card-value" style="font-size: 1rem;">প্রতি মাসের ৫ তারিখ</div>
+                    </div>
+                    <div class="card">
+                        <div class="card-label" data-en="Status" data-bn="স্ট্যাটাস">স্ট্যাটাস</div>
+                        <span class="status-badge status-pending" data-en="Pending" data-bn="অপেক্ষমাণ">অপেক্ষমাণ</span>
+                    </div>
+                </div>
+
+                <div class="alert alert-warning" style="margin-top: 1rem;">
+                    <span>⚠️</span>
+                    <div>
+                        <strong data-en="Payment Due Soon" data-bn="শীঘ্রই পেমেন্ট বকেয়া">শীঘ্রই পেমেন্ট বকেয়া</strong>
+                        <p data-en="Next payment due in 5 days" data-bn="পরবর্তী পেমেন্ট ৫ দিনে বকেয়া">পরবর্তী পেমেন্ট ৫ দিনে বকেয়া</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3 data-en="Select Payment Method" data-bn="পেমেন্ট পদ্ধতি নির্বাচন করুন">পেমেন্ট পদ্ধতি নির্বাচন করুন</h3>
+                
+                <div class="payment-methods">
+                    <!-- bKash -->
+                    <label class="payment-method-group">
+                        <input type="radio" name="paymentMethod" value="bkash" onchange="updatePaymentDetails('bkash')">
+                        <span class="payment-method-icon">📱</span>
+                        <div class="payment-method-info">
+                            <div class="payment-method-name">bKash</div>
+                            <div class="payment-method-desc" data-en="Mobile money transfer - Instant" data-bn="মোবাইল মানি ট্রান্সফার - তাৎক্ষণিক">মোবাইল মানি ট্রান্সফার - তাৎক্ষণিক</div>
+                        </div>
+                    </label>
+
+                    <!-- Nagad -->
+                    <label class="payment-method-group">
+                        <input type="radio" name="paymentMethod" value="nagad" onchange="updatePaymentDetails('nagad')">
+                        <span class="payment-method-icon">💳</span>
+                        <div class="payment-method-info">
+                            <div class="payment-method-name">Nagad</div>
+                            <div class="payment-method-desc" data-en="Digital payment service - Fast" data-bn="ডিজিটাল পেমেন্ট সেবা - দ্রুত">ডিজিটাল পেমেন্ট সেবা - দ্রুত</div>
+                        </div>
+                    </label>
+
+                    <!-- Rocket -->
+                    <label class="payment-method-group">
+                        <input type="radio" name="paymentMethod" value="rocket" onchange="updatePaymentDetails('rocket')">
+                        <span class="payment-method-icon">🚀</span>
+                        <div class="payment-method-info">
+                            <div class="payment-method-name">Rocket</div>
+                            <div class="payment-method-desc" data-en="Mobile banking service - Secure" data-bn="মোবাইল ব্যাংকিং সেবা - নিরাপদ">মোবাইল ব্যাংকিং সেবা - নিরাপদ</div>
+                        </div>
+                    </label>
+
+                    <!-- Bank Transfer -->
+                    <label class="payment-method-group">
+                        <input type="radio" name="paymentMethod" value="bank" onchange="updatePaymentDetails('bank')">
+                        <span class="payment-method-icon">🏦</span>
+                        <div class="payment-method-info">
+                            <div class="payment-method-name" data-en="Bank Transfer" data-bn="ব্যাংক ট্রান্সফার">ব্যাংক ট্রান্সফার</div>
+                            <div class="payment-method-desc" data-en="Direct bank account transfer - 1-2 days" data-bn="সরাসরি ব্যাংক অ্যাকাউন্ট ট্রান্সফার - ১-২ দিন">সরাসরি ব্যাংক অ্যাকাউন্ট ট্রান্সফার - ১-২ দিন</div>
+                        </div>
+                    </label>
+
+                    <!-- Cash -->
+                    <label class="payment-method-group">
+                        <input type="radio" name="paymentMethod" value="cash" onchange="updatePaymentDetails('cash')">
+                        <span class="payment-method-icon">💵</span>
+                        <div class="payment-method-info">
+                            <div class="payment-method-name" data-en="Cash Payment" data-bn="নগদ পেমেন্ট">নগদ পেমেন্ট</div>
+                            <div class="payment-method-desc" data-en="Pay in cash to collection team - On pickup" data-bn="সংগ্রহ দলকে নগদ অর্থ প্রদান করুন - পিকআপের সময়">সংগ্রহ দলকে নগদ অর্থ প্রদান করুন - পিকআপের সময়</div>
+                        </div>
+                    </label>
+
+                    <!-- Cheque -->
+                    <label class="payment-method-group">
+                        <input type="radio" name="paymentMethod" value="cheque" onchange="updatePaymentDetails('cheque')">
+                        <span class="payment-method-icon">📄</span>
+                        <div class="payment-method-info">
+                            <div class="payment-method-name" data-en="Cheque" data-bn="চেক">চেক</div>
+                            <div class="payment-method-desc" data-en="Post-dated cheque - 3-5 days" data-bn="পোস্ট-ডেটেড চেক - ৩-৫ দিন">পোস্ট-ডেটেড চেক - ৩-৫ দিন</div>
+                        </div>
+                    </label>
+                </div>
+
+                <div id="paymentDetailsSection" class="payment-details">
+                    <h4 style="margin-bottom: 1rem; color: var(--primary-green);" data-en="Enter Payment Details" data-bn="পেমেন্ট বিবরণ প্রবেশ করুন">পেমেন্ট বিবরণ প্রবেশ করুন</h4>
+                    
+                    <!-- bKash Details -->
+                    <div id="bkashDetails" class="payment-detail-form hidden">
+                        <div class="form-group">
+                            <label data-en="bKash Account Number" data-bn="bKash অ্যাকাউন্ট নম্বর">bKash অ্যাকাউন্ট নম্বর</label>
+                            <input type="text" placeholder="01XXXXXXXXX" required>
+                        </div>
+                        <div class="form-group">
+                            <label data-en="Transaction Reference" data-bn="লেনদেন রেফারেন্স">লেনদেন রেফারেন্স</label>
+                            <input type="text" placeholder="e.g., ABC123XYZ" required>
+                        </div>
+                    </div>
+
+                    <!-- Nagad Details -->
+                    <div id="nagadDetails" class="payment-detail-form hidden">
+                        <div class="form-group">
+                            <label data-en="Nagad Account Number" data-bn="Nagad অ্যাকাউন্ট নম্বর">Nagad অ্যাকাউন্ট নম্বর</label>
+                            <input type="text" placeholder="01XXXXXXXXX" required>
+                        </div>
+                        <div class="form-group">
+                            <label data-en="Transaction Reference" data-bn="লেনদেন রেফারেন্স">লেনদেন রেফারেন্স</label>
+                            <input type="text" placeholder="e.g., NAG123XYZ" required>
+                        </div>
+                    </div>
+
+                    <!-- Rocket Details -->
+                    <div id="rocketDetails" class="payment-detail-form hidden">
+                        <div class="form-group">
+                            <label data-en="Rocket Account Number" data-bn="Rocket অ্যাকাউন্ট নম্বর">Rocket অ্যাকাউন্ট নম্বর</label>
+                            <input type="text" placeholder="01XXXXXXXXX" required>
+                        </div>
+                        <div class="form-group">
+                            <label data-en="Transaction Reference" data-bn="লেনদেন রেফারেন্স">লেনদেন রেফারেন্স</label>
+                            <input type="text" placeholder="e.g., RKT123XYZ" required>
+                        </div>
+                    </div>
+
+                    <!-- Bank Transfer Details -->
+                    <div id="bankDetails" class="payment-detail-form hidden">
+                        <div class="form-group">
+                            <label data-en="Bank Name" data-bn="ব্যাংকের নাম">ব্যাংকের নাম</label>
+                            <input type="text" placeholder="e.g., Dhaka Bank" required>
+                        </div>
+                        <div class="form-group">
+                            <label data-en="Account Number" data-bn="অ্যাকাউন্ট নম্বর">অ্যাকাউন্ট নম্বর</label>
+                            <input type="text" placeholder="e.g., 1234567890" required>
+                        </div>
+                        <div class="form-group">
+                            <label data-en="Transaction Reference" data-bn="লেনদেন রেফারেন্স">লেনদেন রেফারেন্স</label>
+                            <input type="text" placeholder="e.g., TRF123XYZ" required>
+                        </div>
+                    </div>
+
+                    <!-- Cash Details -->
+                    <div id="cashDetails" class="payment-detail-form hidden">
+                        <div class="alert alert-info">
+                            <span>ℹ️</span>
+                            <div>
+                                <strong data-en="Cash Payment" data-bn="নগদ পেমেন্ট">নগদ পেমেন্ট</strong>
+                                <p data-en="Please pay the amount directly to the collection team during pickup. Keep the receipt for your records." data-bn="অনুগ্রহ করে পিকআপের সময় সংগ্রহ দলকে সরাসরি অর্থ প্রদান করুন। আপনার রেকর্ডের জন্য রসিদ রাখুন।">অনুগ্রহ করে পিকআপের সময় সংগ্রহ দলকে সরাসরি অর্থ প্রদান করুন। আপনার রেকর্ডের জন্য রসিদ রাখুন।</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Cheque Details -->
+                    <div id="chequeDetails" class="payment-detail-form hidden">
+                        <div class="form-group">
+                            <label data-en="Cheque Number" data-bn="চেক নম্বর">চেক নম্বর</label>
+                            <input type="text" placeholder="e.g., 123456" required>
+                        </div>
+                        <div class="form-group">
+                            <label data-en="Cheque Date" data-bn="চেকের তারিখ">চেকের তারিখ</label>
+                            <input type="date" required>
+                        </div>
+                        <div class="form-group">
+                            <label data-en="Bank Name" data-bn="ব্যাংকের নাম">ব্যাংকের নাম</label>
+                            <input type="text" placeholder="e.g., Dhaka Bank" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="payment-summary">
+                    <div class="summary-row">
+                        <span data-en="Subtotal" data-bn="সাবটোটাল">সাবটোটাল</span>
+                        <span>৳ 8,000</span>
+                    </div>
+                    <div class="summary-row">
+                        <span data-en="Processing Fee" data-bn="প্রক্রিয়াকরণ ফি">প্রক্রিয়াকরণ ফি</span>
+                        <span id="processingFee">৳ 0</span>
+                    </div>
+                    <div class="summary-row">
+                        <span data-en="Total Amount" data-bn="মোট পরিমাণ">মোট পরিমাণ</span>
+                        <span id="totalAmount">৳ 8,000</span>
+                    </div>
+                </div>
+
+                <div class="payment-action-buttons">
+                    <button class="btn btn-pay" onclick="processPayment()" data-en="Pay Now" data-bn="এখনই পেমেন্ট করুন">এখনই পেমেন্ট করুন</button>
+                    <button class="btn btn-refund" onclick="requestRefund()" data-en="Request Refund" data-bn="রিফান্ড অনুরোধ করুন">রিফান্ড অনুরোধ করুন</button>
+                </div>
+            </div>
+
+            <div class="bonus-banner">
+                🎉 <span data-en="You have received a bonus of ৳ 200!" data-bn="আপনি ৳ ২০০ বোনাস পেয়েছেন!">আপনি ৳ ২০০ বোনাস পেয়েছেন!</span>
+            </div>
+
+            <!-- Added incentive section -->
+            <div class="card mt-2">
+                <h3 data-en="Incentive Program" data-bn="প্রণোদনা প্রোগ্রাম">প্রণোদনা প্রোগ্রাম</h3>
+                <div class="card-grid">
+                    <div class="card">
+                        <div class="card-label" data-en="Loyalty Points" data-bn="আনুগত্য পয়েন্ট">আনুগত্য পয়েন্ট</div>
+                        <div class="card-value">2,450</div>
+                        <p style="color: var(--success);" data-en="Redeemable" data-bn="রিডিম করা যায়">রিডিম করা যায়</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-label" data-en="Referral Bonus" data-bn="রেফারেল বোনাস">রেফারেল বোনাস</div>
+                        <div class="card-value">৳ 500</div>
+                        <p style="color: var(--primary-green);" data-en="Available" data-bn="উপলব্ধ">উপলব্ধ</p>
+                    </div>
+                    <div class="card">
+                        <div class="card-label" data-en="Monthly Reward" data-bn="মাসিক পুরস্কার">মাসিক পুরস্কার</div>
+                        <div class="card-value">৳ 1,000</div>
+                        <p style="color: var(--accent-green);" data-en="Earned" data-bn="অর্জিত">অর্জিত</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Notifications Section -->
+        <section id="notifications">
+            <h2 data-en="Notifications & Alerts" data-bn="বিজ্ঞপ্তি এবং সতর্কতা">বিজ্ঞপ্তি এবং সতর্কতা</h2>
+
+            <div class="notification-item unread">
+                <div class="notification-content">
+                    <strong data-en="Pickup Reminder" data-bn="পিকআপ রিমাইন্ডার">পিকআপ রিমাইন্ডার</strong>
+                    <p data-en="Your waste collection will start within 2 hours" data-bn="আপনার বর্জ্য সংগ্রহ ২ ঘন্টার মধ্যে শুরু হবে">আপনার বর্জ্য সংগ্রহ ২ ঘন্টার মধ্যে শুরু হবে</p>
+                    <div class="notification-time" data-en="5 minutes ago" data-bn="৫ মিনিট আগে">৫ মিনিট আগে</div>
+                </div>
+                <button class="btn" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;" onclick="markAsRead(this)" data-en="Mark as Read" data-bn="পড়া হিসাবে চিহ্নিত করুন">পড়া হিসাবে চিহ্নিত করুন</button>
+            </div>
+
+            <div class="notification-item unread">
+                <div class="notification-content">
+                    <strong data-en="Collection Delay" data-bn="সংগ্রহ বিলম্ব">সংগ্রহ বিলম্ব</strong>
+                    <p data-en="Collection team is running late. New ETA: 3:30 PM" data-bn="সংগ্রহ দল বিলম্বে চলছে। নতুন ETA: ৩:৩০ PM">সংগ্রহ দল বিলম্বে চলছে। নতুন ETA: ৩:৩০ PM</p>
+                    <div class="notification-time" data-en="15 minutes ago" data-bn="১৫ মিনিট আগে">१५ मिनट पहले</div>
+                </div>
+                <button class="btn" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;" onclick="markAsRead(this)" data-en="Mark as Read" data-bn="পড়া হিসাবে চিহ্নিত করুন">पढ़ा हुआ चिह्नित करें</button>
+            </div>
+
+            <!-- Added stock alert notification -->
+            <div class="notification-item">
+                <div class="notification-content">
+                    <strong data-en="Stock Alert" data-bn="স্টক সতর্কতা">স্টক সতর্কতা</strong>
+                    <p data-en="Glass Bottles are now in stock at the recycling center" data-bn="কাচের বোতল এখন রিসাইক্লিং সেন্টারে স্টকে আছে">কাচের বোতল এখন রিসাইক্লিং সেন্টারে স্টকে আছে</p>
+                    <div class="notification-time" data-en="1 hour ago" data-bn="১ ঘণ্টা আগে">१ घंटा पहले</div>
+                </div>
+                <button class="btn" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;" onclick="viewDetails()" data-en="View Details" data-bn="বিস্তারিত দেখুন">विवरण देखें</button>
+            </div>
+
+            <div class="notification-item">
+                <div class="notification-content">
+                    <strong data-en="Payment Failed" data-bn="পেমেন্ট ব্যর্থ">পেমেন্ট ব্যর্থ</strong>
+                    <p data-en="Your payment for waste collection could not be processed. Please retry." data-bn="আপনার বর্জ্য সংগ্রহের জন্য পেমেন্ট প্রক্রিয়া করা যায়নি। অনুগ্রহ করে পুনরায় চেষ্টা করুন।">আপনার বর্জ্য সংগ্রহের জন্য পেমেন্ট প্রক্রিয়া করা যায়নি। অনুগ্রহ করে পুনরায় চেষ্টা করুন।</p>
+                    <div class="notification-time" data-en="2 hours ago" data-bn="২ ঘণ্টা আগে">२ घंटा पहले</div>
+                </div>
+                <button class="btn btn-danger" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;" onclick="retryPayment()" data-en="Retry Payment" data-bn="পেমেন্ট পুনরায় চেষ্টা করুন">पुनः भुगतान करें</button>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact">
+            <div class="card">
+                <h2 data-en="Contact Us" data-bn="আমাদের সাথে যোগাযোগ করুন">আমাদের সাথে যোগাযোগ করুন</h2>
+                <form onsubmit="submitContact(event)">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label data-en="Name" data-bn="নাম">নাম</label>
+                            <input type="text" required>
+                        </div>
+                        <div class="form-group">
+                            <label data-en="Email / Phone" data-bn="ইমেইল / ফোন">ইমেইল / ফোন</label>
+                            <input type="text" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label data-en="Message" data-bn="বার্তা">বার্তা</label>
+                        <textarea required></textarea>
+                    </div>
+
+                    <button type="submit" class="btn" data-en="Send Message" data-bn="বার্তা পাঠান">বার্তা পাঠান</button>
+                </form>
+            </div>
+
+            <div class="card-grid">
+                <div class="card">
+                    <div class="card-title" data-en="Address" data-bn="ঠিকানা">ঠিকানা</div>
+                    <p>বর্জ্য ব্যবস্থাপনা সিস্টেম<br>ঢাকা, বাংলাদেশ</p>
+                </div>
+                <div class="card">
+                    <div class="card-title" data-en="Phone" data-bn="ফোন">ফোন</div>
+                    <p>+880 1700-000000<br>+880 1800-000000</p>
+                </div>
+                <div class="card">
+                    <div class="card-title" data-en="Email" data-bn="ইমেইল">ইমেইল</div>
+                    <p>info@wastemanagement.bd<br>support@wastemanagement.bd</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2025 <span data-en="Waste Management System" data-bn="বর্জ্য ব্যবস্থাপনা সিস্টেম">বর্জ্য ব্যবস্থাপনা সিস্টেম</span>. <span data-en="All rights reserved." data-bn="সর্বাধিকার সংরক্ষিত।">সর্বাধিকার সংরক্ষিত।</span></p>
+    </footer>
+
+    <script>
+        let currentLanguage = 'bn';
+
+        // Language Toggle
+        function toggleLanguage() {
+            currentLanguage = currentLanguage === 'bn' ? 'en' : 'bn';
+            document.documentElement.lang = currentLanguage;
+            document.getElementById('langToggle').textContent = currentLanguage === 'bn' ? 'EN' : 'BN';
+            updateAllText();
+        }
+
+        function updateAllText() {
+            const elements = document.querySelectorAll('[data-en][data-bn]');
+            elements.forEach(el => {
+                if (el.tagName === 'OPTION' || el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+                    el.textContent = currentLanguage === 'bn' ? el.dataset.bn : el.dataset.en;
+                } else {
+                    el.textContent = currentLanguage === 'bn' ? el.dataset.bn : el.dataset.en;
+                }
+            });
+        }
+
+        // Section Navigation
+        function showSection(sectionId) {
+            document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+            document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+            event.target.classList.add('active');
+            document.getElementById('navLinks').classList.remove('active');
+        }
+
+        // Hamburger Menu
+        document.getElementById('hamburger').addEventListener('click', () => {
+            document.getElementById('navLinks').classList.toggle('active');
+        });
+
+        // Waste Form Submission
+        function submitWasteForm(e) {
+            e.preventDefault();
+            const weight = document.getElementById('weight').value;
+            const area = document.getElementById('area').value;
+            const pricePerKg = 20;
+            const estimatedPrice = weight * pricePerKg;
+            document.getElementById('estimatedPrice').textContent = '৳ ' + estimatedPrice;
+            document.getElementById('confirmLocation').textContent = area.replace('-', ' ').toUpperCase();
+            document.getElementById('wasteConfirmation').classList.remove('hidden');
+            document.querySelector('#sell-waste form').style.display = 'none';
+        }
+
+        // Update Status
+        function updateStatus(btn, status) {
+            const row = btn.closest('tr');
+            const statusCell = row.querySelector('.status-badge');
+            if (status === 'completed') {
+                statusCell.textContent = currentLanguage === 'bn' ? 'সম্পন্ন' : 'Completed';
+                statusCell.className = 'status-badge status-completed';
+            } else if (status === 'failed') {
+                statusCell.textContent = currentLanguage === 'bn' ? 'ব্যর্থ' : 'Failed';
+                statusCell.className = 'status-badge status-failed';
+            }
+            row.querySelector('td:last-child').innerHTML = '<span style="color: var(--text-secondary);">' + (currentLanguage === 'bn' ? 'আপডেট করা হয়েছে' : 'Updated') + '</span>';
+        }
+
+        // Generate Report
+        function generateReport() {
+            alert(currentLanguage === 'bn' ? 'রিপোর্ট তৈরি হচ্ছে...' : 'Generating report...');
+        }
+
+        // Recycling Order
+        function submitRecyclingOrder(e) {
+            e.preventDefault();
+            document.getElementById('recyclingConfirmation').classList.remove('hidden');
+            document.querySelector('#recycling form').style.display = 'none';
+        }
+
+        // Mark as Read
+        function markAsRead(btn) {
+            btn.closest('.notification-item').classList.remove('unread');
+            btn.textContent = currentLanguage === 'bn' ? 'পড়া হয়েছে' : 'Read';
+        }
+
+        // View Details
+        function viewDetails() {
+            alert(currentLanguage === 'bn' ? 'বিস্তারিত তথ্য দেখা যাচ্ছে...' : 'Viewing details...');
+        }
+
+        // Retry Payment
+        function retryPayment() {
+            alert(currentLanguage === 'bn' ? 'পেমেন্ট পুনরায় চেষ্টা করা হচ্ছে...' : 'Retrying payment...');
+        }
+
+        // Contact Form
+        function submitContact(e) {
+            e.preventDefault();
+            alert(currentLanguage === 'bn' ? 'আপনার বার্তা পাঠানো হয়েছে!' : 'Your message has been sent!');
+            e.target.reset();
+        }
+
+        // Payment Methods
+        function updatePaymentDetails(method) {
+            const detailsSection = document.getElementById('paymentDetailsSection');
+            const allForms = document.querySelectorAll('.payment-detail-form');
+            
+            // Hide all forms
+            allForms.forEach(form => form.classList.add('hidden'));
+            
+            // Show selected method details
+            detailsSection.classList.add('active');
+            
+            const methodMap = {
+                'bkash': 'bkashDetails',
+                'nagad': 'nagadDetails',
+                'rocket': 'rocketDetails',
+                'bank': 'bankDetails',
+                'cash': 'cashDetails',
+                'cheque': 'chequeDetails'
+            };
+            
+            const selectedForm = document.getElementById(methodMap[method]);
+            if (selectedForm) {
+                selectedForm.classList.remove('hidden');
+            }
+            
+            // Update processing fee based on method
+            const processingFees = {
+                'bkash': 50,
+                'nagad': 40,
+                'rocket': 45,
+                'bank': 100,
+                'cash': 0,
+                'cheque': 75
+            };
+            
+            const fee = processingFees[method] || 0;
+            document.getElementById('processingFee').textContent = '৳ ' + fee;
+            document.getElementById('totalAmount').textContent = '৳ ' + (8000 + fee);
+        }
+
+        function processPayment() {
+            const selectedMethod = document.querySelector('input[name="paymentMethod"]:checked');
+            
+            if (!selectedMethod) {
+                alert(currentLanguage === 'bn' ? 'অনুগ্রহ করে একটি পেমেন্ট পদ্ধতি নির্বাচন করুন' : 'Please select a payment method');
+                return;
+            }
+            
+            const methodNames = {
+                'bkash': 'bKash',
+                'nagad': 'Nagad',
+                'rocket': 'Rocket',
+                'bank': currentLanguage === 'bn' ? 'ব্যাংক ট্রান্সফার' : 'Bank Transfer',
+                'cash': currentLanguage === 'bn' ? 'নগদ' : 'Cash',
+                'cheque': currentLanguage === 'bn' ? 'চেক' : 'Cheque'
+            };
+            
+            const method = selectedMethod.value;
+            const methodName = methodNames[method];
+            const totalAmount = document.getElementById('totalAmount').textContent;
+            
+            const message = currentLanguage === 'bn' 
+                ? `পেমেন্ট প্রক্রিয়া করা হচ্ছে...\n\nপদ্ধতি: ${methodName}\nপরিমাণ: ${totalAmount}\n\nআপনার পেমেন্ট সফলভাবে প্রক্রিয়া করা হয়েছে!`
+                : `Processing payment...\n\nMethod: ${methodName}\nAmount: ${totalAmount}\n\nYour payment has been processed successfully!`;
+            
+            alert(message);
+            
+            // Show success notification
+            const successAlert = document.createElement('div');
+            successAlert.className = 'alert alert-success';
+            successAlert.innerHTML = `
+                <span>✓</span>
+                <div>
+                    <strong>${currentLanguage === 'bn' ? 'পেমেন্ট সফল!' : 'Payment Successful!'}</strong>
+                    <p>${currentLanguage === 'bn' ? `আপনার পেমেন্ট ${methodName} এর মাধ্যমে সফলভাবে প্রক্রিয়া করা হয়েছে।` : `Your payment has been successfully processed via ${methodName}.`}</p>
+                </div>
+            `;
+            
+            const paymentCard = document.querySelector('#payments .card:nth-of-type(2)');
+            paymentCard.insertBefore(successAlert, paymentCard.firstChild);
+        }
+
+        function requestRefund() {
+            const message = currentLanguage === 'bn' 
+                ? 'রিফান্ড অনুরোধ জমা দেওয়া হয়েছে। আমরা ৫-৭ কর্মদিবসের মধ্যে প্রক্রিয়া করব।'
+                : 'Refund request submitted. We will process it within 5-7 business days.';
+            
+            alert(message);
+        }
+
+        function viewReceipt(btn) {
+            const row = btn.closest('tr');
+            const date = row.cells[0].textContent;
+            const description = row.cells[1].textContent;
+            const amount = row.cells[2].textContent;
+            const method = row.cells[3].textContent;
+            const status = row.cells[4].textContent;
+            
+            const receiptMessage = currentLanguage === 'bn' 
+                ? `রসিদ বিবরণ:\n\nতারিখ: ${date}\nবর্ণনা: ${description}\nপরিমাণ: ${amount}\nপদ্ধতি: ${method}\nস্ট্যাটাস: ${status}`
+                : `Receipt Details:\n\nDate: ${date}\nDescription: ${description}\nAmount: ${amount}\nMethod: ${method}\nStatus: ${status}`;
+            
+            alert(receiptMessage);
+        }
+
+        function retryFailedPayment(btn) {
+            const row = btn.closest('tr');
+            const amount = row.cells[2].textContent;
+            
+            const message = currentLanguage === 'bn' 
+                ? `পেমেন্ট পুনরায় চেষ্টা করা হচ্ছে...\n\nপরিমাণ: ${amount}\n\nঅনুগ্রহ করে একটি পেমেন্ট পদ্ধতি নির্বাচন করুন।`
+                : `Retrying payment...\n\nAmount: ${amount}\n\nPlease select a payment method.`;
+            
+            alert(message);
+            
+            // Scroll to payment methods
+            document.querySelector('#payments .payment-methods').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Initialize
+        updateAllText();
+    </script>
+</body>
+</html>
